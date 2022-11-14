@@ -1,4 +1,4 @@
-# Librería para control de shield kaanbal o chimalli
+# Librería para control de shield kaanbal
 ## Kaanbal
 * Shield para Arduino nano
 * C++
@@ -14,8 +14,4 @@ $user="irvyn"
 Copy-Item -Path "C:\Users\$user\Documents\ic\hwlib\Kaanbal" -Destination "C:\Users\$user\Documents\Arduino\libraries" -Recurse -Force
 ```
 
-## Chimalli
-* Shield para Raspberri pi
-* Python
-
-![kaanbal-chimalli](https://drive.google.com/uc?export=view&id=15EJnb_c1G7KnUYNzaDpBNI2bReofG2Za)
+![kaanbal-chimalli](https://drive.google.com/uc?export=view&id=17g-OoKZGfAfieqKLzZ5uVrpLoWZCDVBi)
