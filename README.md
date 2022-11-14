@@ -3,11 +3,10 @@
 * Shield para Arduino nano
 * C++
 
-### Comprimir para importar en IDE
-* Comprimir archivo en power shell, para después añadir desde el IDE de arduino.
-    ```
-    Compress-Archive .\kaanbal-lib\*.* -DestinationPath .\kaanbal.zip -F
-    ```
+### Comprimir archivo en power shell, para después añadir desde el IDE de arduino
+```
+Compress-Archive .\kaanbal-lib\*.* -DestinationPath .\kaanbal.zip -F
+```
 ### Copiar a la carpeta de libraries
 ```
 $user="irvyn"
