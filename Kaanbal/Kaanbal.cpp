@@ -35,10 +35,16 @@ void Motor::_changeStates(bool valueA, bool valueB){
     digitalWrite(_poloA, valueA);
     digitalWrite(_poloB, valueB);
 }
-void Motor::toTurn(bool valueA, bool valueB){
-    if(valueA != valueB){
+void Motor::toTurn(bool valueA, bool valueB, int velocity=0){
+    if(valueA != valueB && velocity == 0){
         _changeStates(valueA, valueB);
     }
+    if(valueA != valueB){
+        int _first_state = valueA ? velocity : 0;
+        int _second_state = valueB ? velocity : 0;
+        analogWrite(_poloA, _first_state);
+        analogWrite(_poloB, _second_state);
+    } 
 }
 void Motor::toStop(){
     _changeStates(LOW, LOW);
@@ -50,4 +56,16 @@ void Motor::turnRight(){
 }
 void Motor::turnLeft(){
     _changeStates(HIGH, LOW);
+}
+
+// Sensor LM36
+
+TemperatureSensor::TemperatureSensor(int pin, float voltage_ref){
+    _pin=pin;
+    voltage_ref = voltage_ref;
+}
+float TemperatureSensor::getValue(){
+    int valuePin = analogRead(_pin);
+    float tempC = (voltage_ref * valuePin * 100.0)/1024;
+    return tempC;
 }

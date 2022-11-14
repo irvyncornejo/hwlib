@@ -24,7 +24,7 @@ class SingleDigitalSensor {
 class Motor{
     public:
         Motor(int poloA, int poloB);
-        void toTurn(bool valueA, bool valueB);
+        void toTurn(bool valueA, bool valueB, int velocity=0);
         void turnRight();
         void turnLeft();
         void toStop();
@@ -32,6 +32,15 @@ class Motor{
         int _poloA;
         int _poloB;
         void _changeStates(bool valueA, bool valueB);
+};
+
+class TemperatureSensor{
+    public:
+        TemperatureSensor(int pin, float voltage_ref);
+        float voltage_ref;
+        float getValue();
+    private:
+        int _pin;
 };
 
 #endif
