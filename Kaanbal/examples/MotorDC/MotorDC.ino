@@ -8,10 +8,10 @@ void setup() {
 }
 
 void loop() {
-  motor_a.toTurn(1,0);
+  motor_a.turnLeft();
   delay(2000);
   motor_a.toStop();
-  delay(500);
-  motor_a.toTurn(0,1);
+  motor_a.turnLeft();
   delay(2000);
+  motor_a.toStop();
 }

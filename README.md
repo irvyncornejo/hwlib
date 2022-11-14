@@ -11,7 +11,7 @@
 ### Copiar a la carpeta de libraries
 ```
 $user="irvyn"
-Copy-Item -Path "C:\Users\$user\Documents\ic\hwlib\Kaanbal" -Destination "C:\Users\$user\Documents\Arduino\libraries" -Recurse -Forse
+Copy-Item -Path "C:\Users\$user\Documents\ic\hwlib\Kaanbal" -Destination "C:\Users\$user\Documents\Arduino\libraries" -Recurse -Force
 ```
 
 ## Chimalli

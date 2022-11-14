@@ -9,8 +9,8 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  led.changeState(1);
+  led.changeState(HIGH);
   delay(1000);
-  led.changeState(0);
+  led.changeState(LOW);
   delay(1000);
 }

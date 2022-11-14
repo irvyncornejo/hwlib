@@ -31,13 +31,23 @@ Motor::Motor(int poloA, int poloB){
     pinMode(_poloA, OUTPUT);
     pinMode(_poloB, OUTPUT);
   }
+void Motor::_changeStates(bool valueA, bool valueB){
+    digitalWrite(_poloA, valueA);
+    digitalWrite(_poloB, valueB);
+}
 void Motor::toTurn(bool valueA, bool valueB){
     if(valueA != valueB){
-      digitalWrite(_poloA, valueA);
-      digitalWrite(_poloB, valueB);
+        _changeStates(valueA, valueB);
     }
 }
 void Motor::toStop(){
-    digitalWrite(_poloA, LOW);
-    digitalWrite(_poloB, LOW);
+    _changeStates(LOW, LOW);
+    delay(500);
+}
+
+void Motor::turnRight(){
+    _changeStates(LOW, HIGH);
+}
+void Motor::turnLeft(){
+    _changeStates(HIGH, LOW);
 }

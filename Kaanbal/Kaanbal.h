@@ -25,10 +25,13 @@ class Motor{
     public:
         Motor(int poloA, int poloB);
         void toTurn(bool valueA, bool valueB);
+        void turnRight();
+        void turnLeft();
         void toStop();
     private:
         int _poloA;
         int _poloB;
+        void _changeStates(bool valueA, bool valueB);
 };
 
 #endif
