@@ -1,6 +1,9 @@
 from umachine import Pin
 import utime
 
+_VOLTAGE_REF: float = 3.3
+_SAMPLES: int = 65535
+
 class RotaryEncoder:
     """
         :dt_pin int
@@ -63,3 +66,62 @@ class RotaryEncoder:
         self._read_button_state()
         self._read_rotatory_state()
 
+class AnalogicMap:
+    """
+       create_map = AnalogicMap()
+       print(create_map.create_map(x, 0, 64300, 0, 100))
+    """
+    def __init__(self, return_float=False):
+        self._return_float = return_float
+
+    def create_map(
+        self,
+        x,
+        in_min,
+        in_max,
+        out_min,
+        out_max
+    ):
+        
+        _value_map = (
+            (x-in_min)*(out_max-out_min)/(in_max - in_min)+out_min
+        )
+        return _value_map if self._return_float else int(_value_map)
+        
+
+class AnalogicInputs:
+    """
+        valid pins: int [26, 27, 28]
+    """
+    def __init__(
+        self,
+        adc_pin: int,
+        voltage_ref: float = _VOLTAGE_REF
+    ) -> None:
+        if adc_pin not in list(range(26,29)):
+            raise ValueError('adc_pin isn´t analogic pin')
+        self._input = umachine.ADC(adc_pin)
+        self._conversion_factor = voltage_ref / _SAMPLES
+
+    def read_voltage(self) -> float:
+        return self._input.read_u16() * self._conversion_factor
+    
+    def read_adc(self) -> int:
+        return self._input.read_u16()
+
+class Potentiometer(AnalogicInputs):
+    """
+        adc_input = Potentiometer(28)
+        while True:
+            print(adc_input.read_adc())
+            utime.sleep(0.1)
+        
+        :adc_pin
+        :voltage_ref
+    """
+    def __init__(
+        self,
+        adc_pin: int,
+        voltage_ref: float = _VOLTAGE_REF
+    ) -> None:
+        super().__init__(adc_pin, voltage_ref)
