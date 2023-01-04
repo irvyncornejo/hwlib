@@ -1,6 +1,6 @@
-# Librería para control de shield kaanbal (Hardware)
+# Librería para control de Hardware
 ## Arduino
-* Shield para Arduino nano
+* Shield para Arduino nano Kaanbal
 * C++
 
 ### Comprimir archivo en power shell, para después añadir desde el IDE de arduino
