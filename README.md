@@ -1,5 +1,5 @@
-# Librería para control de shield kaanbal
-## Kaanbal
+# Librería para control de shield kaanbal (Hardware)
+## Arduino
 * Shield para Arduino nano
 * C++
 
@@ -14,3 +14,7 @@ Copy-Item -Path "C:\Users\$user\Documents\ic\hwlib\Kaanbal" -Destination "C:\Use
 ```
 
 ![kaanbal-chimalli](https://drive.google.com/uc?export=view&id=17g-OoKZGfAfieqKLzZ5uVrpLoWZCDVBi)
+
+# Librería para control de hardware
+## Raspberry pico o pico w
+* Python
