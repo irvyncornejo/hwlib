@@ -1,5 +1,5 @@
-from umachine import Pin
-import utime
+from umachine import Pin, ADC
+from utime import sleep
 
 _VOLTAGE_REF: float = 3.3
 _SAMPLES: int = 65535
@@ -16,7 +16,7 @@ class RotaryEncoder:
 
         while True:
             encoder.read()
-            utime.sleep(0.009)
+            sleep(0.009)
             print(encoder.value)
             print(encoder.is_pressed)
     """
@@ -99,8 +99,8 @@ class AnalogicInputs:
         voltage_ref: float = _VOLTAGE_REF
     ) -> None:
         if adc_pin not in list(range(26,29)):
-            raise ValueError('adc_pin isn´t analogic pin')
-        self._input = umachine.ADC(adc_pin)
+            raise ValueError('adc_pin defined isn´t analogic pin')
+        self._input = ADC(adc_pin)
         self._conversion_factor = voltage_ref / _SAMPLES
 
     def read_voltage(self) -> float:
@@ -114,7 +114,7 @@ class Potentiometer(AnalogicInputs):
         adc_input = Potentiometer(28)
         while True:
             print(adc_input.read_adc())
-            utime.sleep(0.1)
+            sleep(0.1)
         
         :adc_pin
         :voltage_ref
@@ -125,3 +125,63 @@ class Potentiometer(AnalogicInputs):
         voltage_ref: float = _VOLTAGE_REF
     ) -> None:
         super().__init__(adc_pin, voltage_ref)
+
+class Joystick(AnalogicInputs):
+    """
+        :adc_pin_rx
+        :adc_pin_ry
+        :button_pin
+        :function_after_press -> pure function
+        :voltage_ref
+        :core_range
+        
+        joystick = Joystick(26, 27, 22)
+        # With event after press button
+        # joystick = Joystick(26, 27, 22, function_after_press=test)
+        while True:
+            direction = joystick.get_direction()
+            print(direction)
+            sleep(0.1)
+    """
+    def __init__(
+        self,
+        adc_pin_rx: int,
+        adc_pin_ry: int,
+        button_pin:int,
+        function_after_press = None,
+        voltage_ref: float = _VOLTAGE_REF,
+        core_range = (40000, 30000)
+    ) -> None:
+        super().__init__(adc_pin_rx, voltage_ref)
+        self._input_x = self._input
+        self._input_y = ADC(adc_pin_ry)
+        self._button = Pin(button_pin, Pin.IN, Pin.PULL_UP)
+        self._function_after_press = function_after_press
+        self._rx_value: int
+        self._ry_value: int
+        self._core_range = core_range
+
+    def _run_event(self):
+        if not self._button.value() and self._function_after_press:
+            self._function_after_press()
+    
+    def get_direction(self):
+        self._rx_value = self._input_x.read_u16()
+        self._ry_value = self._input_y.read_u16()
+        self._run_event()
+        if self._rx_value > self._core_range[0]:
+            return 'Up'
+        if self._rx_value < self._core_range[1]:
+            return 'Down'
+        if self._ry_value > self._core_range[0]:
+            return 'Right'
+        if self._ry_value < self._core_range[1]:
+            return 'Left'
+        else: return None
+
+class LM35(AnalogicInputs):
+    pass
+
+if __name__=='__main__':
+    pass    
+
