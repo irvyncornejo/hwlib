@@ -116,21 +116,11 @@ class Led(DigitalFullControl):
         super().__init__(pin, inverted_logic)
 
 class SolidStateRelay(DigitalFullControl):
-    def __init__(self) -> None:
+    def __init__(self, pin: int, inverted_logic: bool = False) -> None:
         super().__init__(pin, inverted_logic)
 
 class Motor:
     pass
 
 if __name__=='__main__':
-    led = Led(2, inverted_logic=True)
-    while True:
-        print('LOW')
-        led.change_pwm(0)
-        sleep(2)
-        print('MEDIUM')
-        led.change_pwm(125)
-        sleep(2)
-        print('HIGH')
-        led.change_pwm(255)
-        sleep(2)
+    pass
