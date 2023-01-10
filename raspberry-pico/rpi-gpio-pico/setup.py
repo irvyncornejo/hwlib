@@ -4,7 +4,7 @@ from setuptools import setup
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
-VERSION = '0.0.1'
+VERSION = '0.0.2'
 DESCRIPTION = 'Easy way to connect hardware and use gpio in raspberry pico'
 PACKAGE_NAME = 'gpiopico'
 AUTHOR = 'Irvyn Cornejo'
@@ -13,7 +13,7 @@ GITHUB_URL = 'https://github.com/irvyncornejo/hwlib/tree/main/raspberry-pico/rpi
 
 setup(
     name = PACKAGE_NAME,
-    packages = [DESCRIPTION],
+    packages = [PACKAGE_NAME],
     version = VERSION,
     license='MIT',
     description = DESCRIPTION,
