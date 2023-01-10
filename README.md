@@ -1,4 +1,5 @@
 # Librería para control de Hardware
+![kaanbal-chimalli](https://drive.google.com/uc?export=view&id=1O7LklcChPpF3NKHRJjVY-0sa80OAXu5J)
 ## Arduino
 * Shield para Arduino nano Kaanbal
 * C++
@@ -13,9 +14,23 @@ $user="irvyn"
 Copy-Item -Path "C:\Users\$user\Documents\ic\hwlib\Kaanbal" -Destination "C:\Users\$user\Documents\Arduino\libraries" -Recurse -Force
 ```
 
-![kaanbal-chimalli](https://drive.google.com/uc?export=view&id=17g-OoKZGfAfieqKLzZ5uVrpLoWZCDVBi)
+```C++
+#include <Kaanbal.h>
 
-# Librería para control de hardware
+SingleActuator led(13);
+
+void setup() {
+}
+
+void loop() {
+  led.changeState(HIGH);
+  delay(1000);
+  led.changeState(LOW);
+  delay(1000);
+}
+```
+
+
 ## Raspberry pico o pico w
 * Python
 GPIO control para raspberry pi pico
