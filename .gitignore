@@ -1,0 +1,7 @@
+#virtual env
+env/
+venv/
+#Modules
+raspberry-pico/rpi-gpio-pico/dist
+raspberry-pico/rpi-gpio-pico/gpiopico.egg-info
+raspberry-pico/rpi-gpio-pico/comands.txt
