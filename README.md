@@ -18,3 +18,4 @@ Copy-Item -Path "C:\Users\$user\Documents\ic\hwlib\Kaanbal" -Destination "C:\Use
 # Librería para control de hardware
 ## Raspberry pico o pico w
 * Python
+GPIO control para raspberry pi pico
