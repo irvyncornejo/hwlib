@@ -25,7 +25,7 @@ class AnalogicMap:
 
 class DigitalSimpleControl:
     """
-        led = DigitalFullControl(2, inverted_logic=True)
+        led = DigitalSimpleControl(2, inverted_logic=True)
         while True:
             print('ON')
             led.change_state(True)
@@ -120,7 +120,4 @@ class SolidStateRelay(DigitalFullControl):
         super().__init__(pin, inverted_logic)
 
 class Motor:
-    pass
-
-if __name__=='__main__':
     pass

@@ -160,6 +160,3 @@ class Joystick(AnalogicInputs):
 class LM35(AnalogicInputs):
     pass
 
-if __name__=='__main__':
-    pass    
-
