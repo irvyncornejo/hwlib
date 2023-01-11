@@ -1,38 +1,22 @@
 from umachine import Pin, PWM
 from utime import sleep
+from gpiopico.utils import AnalogicMap
 
-class AnalogicMap:
-    """
-       create_map = AnalogicMap()
-       print(create_map.create_map(x, 0, 64300, 0, 100))
-    """
-    def __init__(self, return_float=False):
-        self._return_float = return_float
+_SAMPLES: int = 65534
 
-    def create_map(
-        self,
-        x,
-        in_min,
-        in_max,
-        out_min,
-        out_max
-    ):
-        
-        _value_map = (
-            (x-in_min)*(out_max-out_min)/(in_max - in_min)+out_min
-        )
-        return _value_map if self._return_float else int(_value_map)
 
 class DigitalSimpleControl:
     """
+        :pin(int)
+        :inverted_logic(bool)
+        
         led = DigitalSimpleControl(2, inverted_logic=True)
-        while True:
-            print('ON')
-            led.change_state(True)
-            sleep(2)
-            print('OFF')
-            led.change_state(False)
-            sleep(2)
+        print('ON')
+        led.change_state(True)
+        sleep(2)
+        print('OFF')
+        led.change_state(False)
+        sleep(2)
 
     """
     def __init__(self, pin: int, inverted_logic:bool = False):
@@ -49,53 +33,62 @@ class DigitalSimpleControl:
             state if self._inverted_logic else not(state)
         )
         self._pin.value(self._state)
+    
+    def on(self):
+        self._pin.value(
+           0 if self._inverted_logic else 1
+        )
+    
+    def off(self):
+        self._pin.value(
+           1 if self._inverted_logic else 0
+        )
 
-class DigitalFullControl(DigitalSimpleControl):
+class DigitalFullControl:
     """
+        :pin(int)
+        :inverted_logic(bool)
+        :use_mapping(bool)
+        
         led = DigitalFullControl(2, inverted_logic=True)
-        while True:
-            print('LOW')
-            led.change_pwm(0)
-            sleep(2)
-            print('MEDIUM')
-            led.change_pwm(125)
-            sleep(2)
-            print('HIGH')
-            led.change_pwm(255)
-            sleep(2)
-            for i in range(0, 255):
-                print(i)
-                led.change_pwm(i)
-                sleep(0.01)
-            for i in range(255, 0):
-                print(i)
-                led.change_pwm(i)
-                sleep(0.01)
+        led = Led(2, True)
+        led.on()
+        sleep(2)
+        led.off()
+        sleep(2)
+        led.pwm_value(125)
+        sleep(2)
     """
     def __init__(
         self,
         pin: int,
-        use_mapping=True,
-        inverted_logic: bool = False
+        inverted_logic: bool = False,
+        use_mapping: bool=True
     ) -> None:
-        super().__init__(pin, inverted_logic)
+        self._inverted_logic = inverted_logic
         self._pin = PWM(Pin(pin))
         self._pwm_value = 0
         self._use_mapping = use_mapping
         self._mapping = AnalogicMap()
-        self._range_map = (0, 65535) if inverted_logic else (65535, 0)
+        self._range_map = (_SAMPLES, 0) if inverted_logic else (0, _SAMPLES)
+        self._limit_range = 255
 
     @property
     def pwm_value(self):
         return self._pwm_value
 
-    def change_pwm(self, pwm_value: int):
+    def pwm_value(self, pwm_value: int, limit_range=None) -> None:
         if self._use_mapping:
             _pwm_value = (
                 self._mapping.create_map(
-                    pwm_value, 0, 255, self._range_map[0], self._range_map[1]
+                    pwm_value,
+                    0,
+                    limit_range if limit_range else self._limit_range,
+                    self._range_map[0],
+                    self._range_map[1]
                 )
             )
+            print(_pwm_value)
             _pwm_value = (
                 _pwm_value if self._inverted_logic else _pwm_value
             )
@@ -104,7 +97,16 @@ class DigitalFullControl(DigitalSimpleControl):
         else:
             self._pwm_value = pwm_value
             self._pin.duty_u16(pwm_value)
-            
+    
+    def on(self):
+        self._pin.duty_u16(
+           0 if self._inverted_logic else _SAMPLES
+        )
+    
+    def off(self):
+        self._pin.duty_u16(
+           _SAMPLES if self._inverted_logic else 0
+        )
             
 
 class Relay(DigitalSimpleControl):
@@ -120,4 +122,50 @@ class SolidStateRelay(DigitalFullControl):
         super().__init__(pin, inverted_logic)
 
 class Motor:
-    pass
+    """
+        :pin_forward(int)
+        :pin_backward(int)
+        
+        from gpiopico import Motor
+        motor_a = Motor(0,1)
+        motor_a.forward()
+        sleep(2)
+        motor_a.backward()
+        sleep(2)
+        motor_a.stop()
+    """
+    def __init__(self, pin_forward: int, pin_backward: int) -> None:
+        self._pin_forward = DigitalFullControl(pin_forward)
+        self._pin_backward = DigitalFullControl(pin_backward)
+        self._limit_range = 100
+        self.stop()
+        
+    def forward(self, velocity=None) -> None:
+        """
+            :velocity(int) 0% - 100%
+        """
+        if velocity:
+            self._pin_forward.pwm_value(
+                velocity if velocity <= 100 else 100,
+                self._limit_range
+            )
+        self._pin_forward.on()
+        self._pin_backward.off()
+    
+    def backward(self, velocity=None) -> None:
+        """
+            :velocity(int) 0% - 100%
+        """
+        if velocity:
+            self._pin_backward.pwm_value(
+                velocity if velocity <= 100 else 100,
+                self._limit_range
+            )
+        self._pin_backward.on()
+        self._pin_forward.off()
+    
+    def stop(self) -> None:
+        self._pin_forward.off()
+        self._pin_backward.off()
+        sleep(0.5)
+
